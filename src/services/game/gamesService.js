@@ -26,3 +26,29 @@ export async function getConferenceSeasonGames({ conferenceId, seasonId, signal 
 
   return data?.data ?? data?.games ?? [];
 }
+
+export async function getGamePlayers({ gameId, signal }) {
+  const response = await fetch(endpoints.gamePlayers, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      game_id: gameId,
+    }),
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  return data?.data ?? data?.players ?? [];
+}
