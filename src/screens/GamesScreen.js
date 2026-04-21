@@ -143,14 +143,16 @@ function GameDetailsScreen({ game, onBack }) {
             <Text style={styles.gamesStateText}>NO PLAYERS FOUND</Text>
           )}
 
-        <TeamSection
-          players={playersState.teams.white}
-          title={`WHITE TEAM (${playersState.teams.white.length})`}
-        />
-        <TeamSection
-          players={playersState.teams.black}
-          title={`BLACK TEAM (${playersState.teams.black.length})`}
-        />
+        <View style={styles.teamsGrid}>
+          <TeamSection
+            players={playersState.teams.white}
+            title={`WHITE (${playersState.teams.white.length})`}
+          />
+          <TeamSection
+            players={playersState.teams.black}
+            title={`BLACK (${playersState.teams.black.length})`}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -183,7 +185,7 @@ const GameCard = memo(function GameCard({ game, onPress }) {
 
 function TeamSection({ players, title }) {
   return (
-    <View style={styles.teamSection}>
+    <View style={styles.teamColumn}>
       <Text style={styles.teamTitle}>{title}</Text>
 
       {players.map(player => (
