@@ -82,22 +82,16 @@ export const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 10,
   },
   contentBody: {
     flexGrow: 1,
   },
   panel: {
     backgroundColor: theme.colors.blue900,
-    borderColor: theme.colors.gray,
-    borderWidth: 2,
     padding: 12,
   },
   helpPanel: {
     backgroundColor: theme.colors.blue800,
-    borderColor: theme.colors.gray,
-    borderTopWidth: 0,
-    borderWidth: 2,
     flex: 1,
     padding: 12,
   },
