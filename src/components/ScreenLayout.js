@@ -2,16 +2,17 @@ import { ScrollView, Text, View } from 'react-native';
 
 import { InfoRow } from './InfoRow';
 import { SeasonDropdown } from './SeasonDropdown';
-import { useSeasons } from '../hooks/useSeasons';
 import { styles } from '../styles/biosStyles';
 
-export function ScreenLayout({ screen, showSeasonDropdown = false }) {
-  const seasonState = useSeasons(showSeasonDropdown);
-
+export function ScreenLayout({
+  screen,
+  seasonState,
+  showSeasonDropdown = false,
+}) {
   return (
     <ScrollView style={styles.content} contentContainerStyle={styles.contentBody}>
       <View style={styles.panel}>
-        {showSeasonDropdown && (
+        {showSeasonDropdown && seasonState && (
           <SeasonDropdown
             error={seasonState.error}
             isLoading={seasonState.isLoading}
@@ -27,7 +28,7 @@ export function ScreenLayout({ screen, showSeasonDropdown = false }) {
 
         <View style={styles.divider} />
 
-        {showSeasonDropdown && (
+        {showSeasonDropdown && seasonState && (
           <InfoRow
             label="Selected season"
             value={seasonState.selectedSeason?.season ?? 'None'}

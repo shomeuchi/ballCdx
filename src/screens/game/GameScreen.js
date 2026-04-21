@@ -3,18 +3,16 @@ import { FlatList, Pressable, Text, View } from 'react-native';
 
 import { SeasonDropdown } from '../../components/SeasonDropdown';
 import { useConferenceSeasonGames } from '../../hooks/useConferenceSeasonGames';
-import { useSeasons } from '../../hooks/useSeasons';
 import { styles } from '../../styles/biosStyles';
 import { GameDetailsScreen } from './gameDetails/GameDetailsScreen';
 
-export function GameScreen() {
+export function GameScreen({ seasonState }) {
   const [selectedGame, setSelectedGame] = useState(null);
-  const seasonState = useSeasons(true);
-  const seasonId = seasonState.selectedSeason?.id ?? null;
+  const seasonId = seasonState?.selectedSeason?.id ?? null;
   const conferenceId =
     seasonId === 9999999
       ? 9999999
-      : seasonState.selectedSeason?.conference_id ?? 1;
+      : seasonState?.selectedSeason?.conference_id ?? 1;
   const gamesState = useConferenceSeasonGames({
     conferenceId,
     seasonId,
@@ -30,12 +28,12 @@ export function GameScreen() {
       <>
         <View style={styles.panel}>
           <SeasonDropdown
-            error={seasonState.error}
+            error={seasonState?.error}
             helperTextOverride={dropdownHelperText}
-            isLoading={seasonState.isLoading}
-            onSelect={seasonState.setSelectedSeasonId}
-            seasons={seasonState.seasons}
-            selectedSeason={seasonState.selectedSeason}
+            isLoading={seasonState?.isLoading}
+            onSelect={seasonState?.setSelectedSeasonId}
+            seasons={seasonState?.seasons ?? []}
+            selectedSeason={seasonState?.selectedSeason}
           />
         </View>
 
@@ -63,11 +61,11 @@ export function GameScreen() {
       gamesState.error,
       gamesState.games.length,
       gamesState.isLoading,
-      seasonState.error,
-      seasonState.isLoading,
-      seasonState.seasons,
-      seasonState.selectedSeason,
-      seasonState.setSelectedSeasonId,
+      seasonState?.error,
+      seasonState?.isLoading,
+      seasonState?.seasons,
+      seasonState?.selectedSeason,
+      seasonState?.setSelectedSeasonId,
     ],
   );
 

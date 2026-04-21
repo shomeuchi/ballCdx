@@ -12,6 +12,7 @@ import {
   SettingsScreen,
   StatsScreen,
 } from './src/screens';
+import { useSeasons } from './src/hooks/useSeasons';
 import { styles } from './src/styles/biosStyles';
 
 const screenComponents = {
@@ -27,6 +28,7 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeScreen, setActiveScreen] = useState('home');
   const ActiveScreen = screenComponents[activeScreen] ?? HomeScreen;
+  const seasonState = useSeasons(isAuthenticated);
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -46,7 +48,7 @@ export default function App() {
         onNavigate={setActiveScreen}
         onLogout={handleLogout}>
         {isAuthenticated ? (
-          <ActiveScreen />
+          <ActiveScreen seasonState={seasonState} />
         ) : (
           <LoginScreen onLogin={handleLogin} />
         )}
