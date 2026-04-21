@@ -19,6 +19,7 @@ export function GameScreen({ seasonState }) {
     conferenceId,
     seasonId,
   });
+  const canAddGame = seasonId !== 9999999;
   const dropdownHelperText = gamesState.isLoading
     ? 'LOADING GAMES...'
     : gamesState.error
@@ -40,11 +41,15 @@ export function GameScreen({ seasonState }) {
         </View>
 
         <View style={styles.gamesPanel}>
-          <Pressable
-            style={styles.addGameButton}
-            onPress={() => setIsAddingGame(true)}>
-            <Text style={styles.addGameButtonText}>ADD GAME</Text>
-          </Pressable>
+          {canAddGame && (
+            <View style={styles.addGameButtonRow}>
+              <Pressable
+                style={styles.addGameButton}
+                onPress={() => setIsAddingGame(true)}>
+                <Text style={styles.addGameButtonText}>ADD GAME</Text>
+              </Pressable>
+            </View>
+          )}
 
           {gamesState.isLoading && (
             <Text style={styles.gamesStateText}>LOADING GAMES...</Text>
@@ -66,6 +71,7 @@ export function GameScreen({ seasonState }) {
     ),
     [
       dropdownHelperText,
+      canAddGame,
       gamesState.error,
       gamesState.games.length,
       gamesState.isLoading,

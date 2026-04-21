@@ -238,6 +238,7 @@ export const styles = StyleSheet.create({
   },
   addGameButton: {
     alignItems: 'center',
+    alignSelf: 'center',
     backgroundColor: theme.colors.gray,
     borderColor: theme.colors.white,
     borderWidth: 2,
@@ -245,6 +246,11 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
     minHeight: 42,
     paddingHorizontal: 12,
+    width: '70%',
+  },
+  addGameButtonRow: {
+    alignItems: 'center',
+    width: '100%',
   },
   addGameButtonText: {
     color: theme.colors.blue900,
