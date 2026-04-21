@@ -236,6 +236,22 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '900',
   },
+  addGameButton: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.gray,
+    borderColor: theme.colors.white,
+    borderWidth: 2,
+    justifyContent: 'center',
+    marginBottom: 8,
+    minHeight: 42,
+    paddingHorizontal: 12,
+  },
+  addGameButtonText: {
+    color: theme.colors.blue900,
+    fontFamily: theme.font.family,
+    fontSize: 14,
+    fontWeight: '900',
+  },
   secondaryButton: {
     alignItems: 'center',
     alignSelf: 'flex-start',

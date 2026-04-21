@@ -41,9 +41,9 @@ export function GameScreen({ seasonState }) {
 
         <View style={styles.gamesPanel}>
           <Pressable
-            style={styles.primaryButton}
+            style={styles.addGameButton}
             onPress={() => setIsAddingGame(true)}>
-            <Text style={styles.primaryButtonText}>ADD GAME</Text>
+            <Text style={styles.addGameButtonText}>ADD GAME</Text>
           </Pressable>
 
           {gamesState.isLoading && (
