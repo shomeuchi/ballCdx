@@ -391,10 +391,12 @@ export const styles = StyleSheet.create({
   teamsGrid: {
     flexDirection: 'row',
     gap: 8,
+    width: '100%',
   },
   teamColumn: {
     flex: 1,
     minWidth: 0,
+    width: '50%',
   },
   teamTitle: {
     color: theme.colors.yellow,
@@ -404,6 +406,7 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
   },
   playerRow: {
+    alignSelf: 'stretch',
     backgroundColor: theme.colors.blue900,
     borderBottomColor: theme.colors.blue700,
     borderBottomWidth: 1,
@@ -411,6 +414,7 @@ export const styles = StyleSheet.create({
     minHeight: 42,
     paddingHorizontal: 7,
     paddingVertical: 7,
+    width: '100%',
   },
   playerName: {
     color: theme.colors.white,
