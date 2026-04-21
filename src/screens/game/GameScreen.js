@@ -125,7 +125,12 @@ export function GameScreen({ seasonState }) {
 }
 
 const GameCard = memo(function GameCard({ game, onPress }) {
-  const winner = game.win_team ? game.win_team.toUpperCase() : 'PENDING';
+  const winner =
+    Number(game.final_score) === 0
+      ? 'TIE GAME'
+      : game.win_team
+        ? game.win_team.toUpperCase()
+        : 'PENDING';
 
   return (
     <Pressable style={styles.gameCard} onPress={() => onPress(game)}>
