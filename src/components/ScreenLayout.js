@@ -1,16 +1,11 @@
 import { ScrollView, Text, View } from 'react-native';
 
-import { InfoRow } from '../components/InfoRow';
-import { SeasonDropdown } from '../components/SeasonDropdown';
-import { screens } from '../data/screens';
+import { InfoRow } from './InfoRow';
+import { SeasonDropdown } from './SeasonDropdown';
 import { useSeasons } from '../hooks/useSeasons';
 import { styles } from '../styles/biosStyles';
 
-const seasonScreenKeys = ['home', 'games', 'stats', 'prediction'];
-
-export function ModuleScreen({ screenKey }) {
-  const screen = screens[screenKey];
-  const showSeasonDropdown = seasonScreenKeys.includes(screenKey);
+export function ScreenLayout({ screen, showSeasonDropdown = false }) {
   const seasonState = useSeasons(showSeasonDropdown);
 
   return (

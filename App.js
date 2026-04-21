@@ -3,13 +3,30 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { BiosShell } from './src/components/BiosShell';
-import { LoginScreen } from './src/screens/LoginScreen';
-import { ModuleScreen } from './src/screens/ModuleScreen';
+import {
+  GamesScreen,
+  HomeScreen,
+  LoginScreen,
+  PlayersScreen,
+  PredictionScreen,
+  SettingsScreen,
+  StatsScreen,
+} from './src/screens';
 import { styles } from './src/styles/biosStyles';
+
+const screenComponents = {
+  games: GamesScreen,
+  home: HomeScreen,
+  players: PlayersScreen,
+  prediction: PredictionScreen,
+  settings: SettingsScreen,
+  stats: StatsScreen,
+};
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeScreen, setActiveScreen] = useState('home');
+  const ActiveScreen = screenComponents[activeScreen] ?? HomeScreen;
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -29,7 +46,7 @@ export default function App() {
         onNavigate={setActiveScreen}
         onLogout={handleLogout}>
         {isAuthenticated ? (
-          <ModuleScreen screenKey={activeScreen} />
+          <ActiveScreen />
         ) : (
           <LoginScreen onLogin={handleLogin} />
         )}
