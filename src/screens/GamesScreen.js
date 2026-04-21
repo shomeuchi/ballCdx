@@ -1,4 +1,5 @@
-import { ScrollView, Text, View } from 'react-native';
+import { memo, useCallback, useMemo } from 'react';
+import { FlatList, Text, View } from 'react-native';
 
 import { SeasonDropdown } from '../components/SeasonDropdown';
 import { useConferenceSeasonGames } from '../hooks/useConferenceSeasonGames';
@@ -16,54 +17,84 @@ export function GamesScreen() {
     conferenceId,
     seasonId,
   });
+  const dropdownHelperText = gamesState.isLoading
+    ? 'LOADING GAMES...'
+    : gamesState.error
+      ? `GAME LINK ERROR: ${gamesState.error}`
+      : `${gamesState.games.length} GAMES LOADED`;
 
-  return (
-    <ScrollView style={styles.content} contentContainerStyle={styles.contentBody}>
-      <View style={styles.panel}>
-        <SeasonDropdown
-          error={seasonState.error}
-          helperTextOverride={
-            gamesState.isLoading
-              ? 'LOADING GAMES...'
-              : gamesState.error
-                ? `GAME LINK ERROR: ${gamesState.error}`
-                : `${gamesState.games.length} GAMES LOADED`
-          }
-          isLoading={seasonState.isLoading}
-          onSelect={seasonState.setSelectedSeasonId}
-          seasons={seasonState.seasons}
-          selectedSeason={seasonState.selectedSeason}
-        />
-      </View>
+  const listHeader = useMemo(
+    () => (
+      <>
+        <View style={styles.panel}>
+          <SeasonDropdown
+            error={seasonState.error}
+            helperTextOverride={dropdownHelperText}
+            isLoading={seasonState.isLoading}
+            onSelect={seasonState.setSelectedSeasonId}
+            seasons={seasonState.seasons}
+            selectedSeason={seasonState.selectedSeason}
+          />
+        </View>
 
-      <View style={styles.gamesPanel}>
-        <Text style={styles.helpTitle}>GAMES</Text>
+        <View style={styles.gamesPanel}>
+          <Text style={styles.helpTitle}>GAMES</Text>
 
-        {gamesState.isLoading && (
-          <Text style={styles.gamesStateText}>LOADING GAMES...</Text>
-        )}
-
-        {gamesState.error ? (
-          <Text style={[styles.gamesStateText, styles.dropdownError]}>
-            GAME LINK ERROR: {gamesState.error}
-          </Text>
-        ) : null}
-
-        {!gamesState.isLoading &&
-          !gamesState.error &&
-          gamesState.games.length === 0 && (
-            <Text style={styles.gamesStateText}>NO GAMES FOUND</Text>
+          {gamesState.isLoading && (
+            <Text style={styles.gamesStateText}>LOADING GAMES...</Text>
           )}
 
-        {gamesState.games.map(game => (
-          <GameCard key={game.id} game={game} />
-        ))}
-      </View>
-    </ScrollView>
+          {gamesState.error ? (
+            <Text style={[styles.gamesStateText, styles.dropdownError]}>
+              GAME LINK ERROR: {gamesState.error}
+            </Text>
+          ) : null}
+
+          {!gamesState.isLoading &&
+            !gamesState.error &&
+            gamesState.games.length === 0 && (
+              <Text style={styles.gamesStateText}>NO GAMES FOUND</Text>
+            )}
+        </View>
+      </>
+    ),
+    [
+      dropdownHelperText,
+      gamesState.error,
+      gamesState.games.length,
+      gamesState.isLoading,
+      seasonState.error,
+      seasonState.isLoading,
+      seasonState.seasons,
+      seasonState.selectedSeason,
+      seasonState.setSelectedSeasonId,
+    ],
+  );
+
+  const renderGame = useCallback(
+    ({ item }) => <GameCard game={item} />,
+    [],
+  );
+
+  const keyExtractor = useCallback(game => `${game.id}`, []);
+
+  return (
+    <FlatList
+      data={gamesState.games}
+      initialNumToRender={12}
+      keyExtractor={keyExtractor}
+      ListHeaderComponent={listHeader}
+      maxToRenderPerBatch={8}
+      removeClippedSubviews
+      renderItem={renderGame}
+      style={styles.content}
+      updateCellsBatchingPeriod={50}
+      windowSize={7}
+    />
   );
 }
 
-function GameCard({ game }) {
+const GameCard = memo(function GameCard({ game }) {
   const winner = game.win_team ? game.win_team.toUpperCase() : 'PENDING';
 
   return (
@@ -91,7 +122,7 @@ function GameCard({ game }) {
       </View>
     </View>
   );
-}
+});
 
 function GameStat({ label, value }) {
   return (

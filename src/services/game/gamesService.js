@@ -1,6 +1,6 @@
 import { endpoints } from '../../constants/api';
 
-export async function getConferenceSeasonGames({ conferenceId, seasonId }) {
+export async function getConferenceSeasonGames({ conferenceId, seasonId, signal }) {
   const response = await fetch(endpoints.conferenceSeasonGames, {
     method: 'POST',
     headers: {
@@ -11,6 +11,7 @@ export async function getConferenceSeasonGames({ conferenceId, seasonId }) {
       conference_id: conferenceId,
       season_id: seasonId,
     }),
+    signal,
   });
 
   if (!response.ok) {

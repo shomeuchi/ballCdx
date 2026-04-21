@@ -9,20 +9,25 @@ export function useConferenceSeasonGames({ conferenceId, seasonId }) {
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
 
     async function loadGames() {
       if (!conferenceId || !seasonId) {
         setGames([]);
+        setError('');
+        setIsLoading(false);
         return;
       }
 
       setIsLoading(true);
       setError('');
+      setGames([]);
 
       try {
         const list = await getConferenceSeasonGames({
           conferenceId,
           seasonId,
+          signal: controller.signal,
         });
 
         if (!isMounted) {
@@ -31,6 +36,10 @@ export function useConferenceSeasonGames({ conferenceId, seasonId }) {
 
         setGames(Array.isArray(list) ? list : []);
       } catch (requestError) {
+        if (requestError.name === 'AbortError') {
+          return;
+        }
+
         if (!isMounted) {
           return;
         }
@@ -48,6 +57,7 @@ export function useConferenceSeasonGames({ conferenceId, seasonId }) {
 
     return () => {
       isMounted = false;
+      controller.abort();
     };
   }, [conferenceId, seasonId]);
 
