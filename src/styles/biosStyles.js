@@ -322,6 +322,7 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '800',
     lineHeight: 20,
+    marginTop: 8,
   },
   gameCard: {
     backgroundColor: theme.colors.blue900,

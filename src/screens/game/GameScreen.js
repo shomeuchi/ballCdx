@@ -4,10 +4,12 @@ import { FlatList, Pressable, Text, View } from 'react-native';
 import { SeasonDropdown } from '../../components/SeasonDropdown';
 import { useConferenceSeasonGames } from '../../hooks/useConferenceSeasonGames';
 import { styles } from '../../styles/biosStyles';
+import { AddGameScreen } from './addGame/AddGameScreen';
 import { GameDetailsScreen } from './gameDetails/GameDetailsScreen';
 
 export function GameScreen({ seasonState }) {
   const [selectedGame, setSelectedGame] = useState(null);
+  const [isAddingGame, setIsAddingGame] = useState(false);
   const seasonId = seasonState?.selectedSeason?.id ?? null;
   const conferenceId =
     seasonId === 9999999
@@ -38,6 +40,12 @@ export function GameScreen({ seasonState }) {
         </View>
 
         <View style={styles.gamesPanel}>
+          <Pressable
+            style={styles.primaryButton}
+            onPress={() => setIsAddingGame(true)}>
+            <Text style={styles.primaryButtonText}>ADD GAME</Text>
+          </Pressable>
+
           {gamesState.isLoading && (
             <Text style={styles.gamesStateText}>LOADING GAMES...</Text>
           )}
@@ -75,6 +83,15 @@ export function GameScreen({ seasonState }) {
   );
 
   const keyExtractor = useCallback(game => `${game.id}`, []);
+
+  if (isAddingGame) {
+    return (
+      <AddGameScreen
+        onBack={() => setIsAddingGame(false)}
+        season={seasonState?.selectedSeason}
+      />
+    );
+  }
 
   if (selectedGame) {
     return (
