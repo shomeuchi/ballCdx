@@ -378,12 +378,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     minHeight: 40,
-    paddingHorizontal: 8,
   },
   menuButton: {
     alignItems: 'center',
     borderColor: theme.colors.blue700,
-    borderWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
     flex: 1,
     justifyContent: 'center',
     minWidth: 0,
@@ -392,7 +392,8 @@ const styles = StyleSheet.create({
   },
   menuButtonActive: {
     backgroundColor: theme.colors.gray,
-    borderColor: theme.colors.white,
+    borderLeftColor: theme.colors.gray,
+    borderRightColor: theme.colors.gray,
   },
   menuText: {
     color: theme.colors.gray,
