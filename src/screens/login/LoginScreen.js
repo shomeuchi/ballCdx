@@ -8,9 +8,9 @@ import {
   View,
 } from 'react-native';
 
-import { theme } from '../constants/theme';
-import { credentials } from '../data/auth';
-import { styles } from '../styles/biosStyles';
+import { theme } from '../../constants/theme';
+import { credentials } from '../../data/auth';
+import { styles } from '../../styles/biosStyles';
 
 export function LoginScreen({ onLogin }) {
   const [username, setUsername] = useState(credentials.username);
