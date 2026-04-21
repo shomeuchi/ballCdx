@@ -208,8 +208,8 @@ function BiosShell({
 }
 
 function LoginScreen({ onLogin }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState(credentials.username);
+  const [password, setPassword] = useState(credentials.password);
   const [error, setError] = useState('');
 
   const submit = () => {
@@ -267,7 +267,7 @@ function LoginScreen({ onLogin }) {
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
         <Pressable style={styles.primaryButton} onPress={submit}>
-          <Text style={styles.primaryButtonText}>ENTER SETUP</Text>
+          <Text style={styles.primaryButtonText}>ENTER</Text>
         </Pressable>
       </View>
 
