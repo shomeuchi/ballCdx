@@ -164,11 +164,7 @@ function BiosShell({
 
       <View style={styles.frame}>
         {isAuthenticated && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.menuBar}
-            contentContainerStyle={styles.menuBarContent}>
+          <View style={styles.menuBar}>
             {navItems.map(([key, label]) => (
               <Pressable
                 key={key}
@@ -187,7 +183,7 @@ function BiosShell({
               </Pressable>
             ))}
 
-          </ScrollView>
+          </View>
         )}
 
         {children}
@@ -375,23 +371,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   menuBar: {
+    alignItems: 'stretch',
     backgroundColor: theme.colors.blue700,
     borderBottomColor: theme.colors.white,
     borderBottomWidth: 2,
-    flexGrow: 0,
-    minHeight: 42,
-  },
-  menuBarContent: {
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 40,
     paddingHorizontal: 8,
-    paddingVertical: 5,
   },
   menuButton: {
+    alignItems: 'center',
     borderColor: theme.colors.blue700,
     borderWidth: 1,
-    marginRight: 8,
-    paddingHorizontal: 9,
-    paddingVertical: 6,
+    flex: 1,
+    justifyContent: 'center',
+    minWidth: 0,
+    paddingHorizontal: 3,
+    paddingVertical: 5,
   },
   menuButtonActive: {
     backgroundColor: theme.colors.gray,
@@ -400,8 +397,9 @@ const styles = StyleSheet.create({
   menuText: {
     color: theme.colors.gray,
     fontFamily: theme.font.family,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
+    textAlign: 'center',
   },
   menuTextActive: {
     color: theme.colors.blue900,
