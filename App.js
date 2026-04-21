@@ -114,7 +114,6 @@ const navItems = [
   ['players', 'Players'],
   ['stats', 'Stats'],
   ['prediction', 'Predict'],
-  ['settings', 'Settings'],
 ];
 
 export default function App() {
@@ -188,9 +187,6 @@ function BiosShell({
               </Pressable>
             ))}
 
-            <Pressable style={styles.menuButton} onPress={onLogout}>
-              <Text style={styles.menuText}>Logout</Text>
-            </Pressable>
           </ScrollView>
         )}
 
@@ -198,10 +194,32 @@ function BiosShell({
       </View>
 
       <View style={styles.bottomBar}>
-        <Text style={styles.bottomText}>AMIBIOS STYLE MOBILE PREVIEW</Text>
-        <Text style={styles.bottomText}>
-          {isAuthenticated ? 'SESSION: GLI' : 'AUTH REQUIRED'}
-        </Text>
+        {isAuthenticated ? (
+          <>
+            <Pressable
+              style={[
+                styles.footerButton,
+                activeScreen === 'settings' && styles.footerButtonActive,
+              ]}
+              onPress={() => onNavigate('settings')}>
+              <Text
+                style={[
+                  styles.footerButtonText,
+                  activeScreen === 'settings' && styles.footerButtonTextActive,
+                ]}>
+                SETTINGS
+              </Text>
+            </Pressable>
+
+            <Text style={styles.bottomText}>SESSION: GLI</Text>
+
+            <Pressable style={styles.footerButton} onPress={onLogout}>
+              <Text style={styles.footerButtonText}>LOGOUT</Text>
+            </Pressable>
+          </>
+        ) : (
+          <Text style={styles.bottomText}>AUTH REQUIRED</Text>
+        )}
       </View>
     </View>
   );
@@ -556,5 +574,23 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '900',
     textAlign: 'center',
+  },
+  footerButton: {
+    borderColor: theme.colors.blue900,
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+  },
+  footerButtonActive: {
+    backgroundColor: theme.colors.blue900,
+  },
+  footerButtonText: {
+    color: theme.colors.blue900,
+    fontFamily: theme.font.family,
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  footerButtonTextActive: {
+    color: theme.colors.yellow,
   },
 });
