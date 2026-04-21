@@ -7,8 +7,11 @@ import { styles } from '../styles/biosStyles';
 
 export function GamesScreen() {
   const seasonState = useSeasons(true);
-  const conferenceId = seasonState.selectedSeason?.conference_id ?? 1;
   const seasonId = seasonState.selectedSeason?.id ?? null;
+  const conferenceId =
+    seasonId === 9999999
+      ? 9999999
+      : seasonState.selectedSeason?.conference_id ?? 1;
   const gamesState = useConferenceSeasonGames({
     conferenceId,
     seasonId,
