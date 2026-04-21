@@ -144,6 +144,75 @@ export const styles = StyleSheet.create({
     minHeight: 48,
     paddingHorizontal: 12,
   },
+  dropdownBlock: {
+    marginBottom: 18,
+  },
+  dropdownButton: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.blue950,
+    borderColor: theme.colors.cyan,
+    borderWidth: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 46,
+    paddingHorizontal: 12,
+  },
+  dropdownButtonActive: {
+    borderColor: theme.colors.yellow,
+  },
+  dropdownButtonDisabled: {
+    opacity: 0.75,
+  },
+  dropdownButtonText: {
+    color: theme.colors.white,
+    flex: 1,
+    fontFamily: theme.font.family,
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  dropdownArrow: {
+    color: theme.colors.yellow,
+    fontFamily: theme.font.family,
+    fontSize: 13,
+    fontWeight: '900',
+    marginLeft: 10,
+  },
+  dropdownMenu: {
+    backgroundColor: theme.colors.blue800,
+    borderColor: theme.colors.cyan,
+    borderTopWidth: 0,
+    borderWidth: 2,
+  },
+  dropdownOption: {
+    borderBottomColor: theme.colors.blue700,
+    borderBottomWidth: 1,
+    minHeight: 38,
+    justifyContent: 'center',
+    paddingHorizontal: 12,
+  },
+  dropdownOptionActive: {
+    backgroundColor: theme.colors.gray,
+  },
+  dropdownOptionText: {
+    color: theme.colors.white,
+    fontFamily: theme.font.family,
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  dropdownOptionTextActive: {
+    color: theme.colors.blue900,
+  },
+  dropdownHelp: {
+    color: theme.colors.gray,
+    fontFamily: theme.font.family,
+    fontSize: 11,
+    fontWeight: '700',
+    lineHeight: 16,
+    marginTop: 6,
+  },
+  dropdownError: {
+    color: theme.colors.red,
+  },
   errorText: {
     color: theme.colors.red,
     fontFamily: theme.font.family,
