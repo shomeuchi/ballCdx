@@ -1,8 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
 const theme = {
   colors: {
+    blue950: '#00004f',
     blue900: '#000080',
     blue800: '#0018a8',
     blue700: '#0030c0',
@@ -10,73 +21,294 @@ const theme = {
     white: '#f8fbff',
     gray: '#b8c7ff',
     yellow: '#ffff66',
+    red: '#ff6b6b',
   },
   font: {
     family: 'monospace',
   },
 };
 
+const credentials = {
+  username: 'gli',
+  password: '1',
+};
+
+const screens = {
+  home: {
+    title: 'Home',
+    summary: 'Command center',
+    rows: [
+      ['Active module', 'Dashboard'],
+      ['Data link', 'Local preview'],
+      ['Session', 'Authenticated'],
+      ['System mode', 'Development'],
+    ],
+    copy:
+      'Select a module below to review basketball operations, player records, statistics, prediction tools, and app preferences.',
+  },
+  games: {
+    title: 'Games',
+    summary: 'Schedule matrix',
+    rows: [
+      ['Tonight', '3 matchups'],
+      ['Next tipoff', '19:30'],
+      ['Court status', 'Open'],
+      ['Sync', 'Manual'],
+    ],
+    copy:
+      'Track fixtures, final scores, venues, and live game readiness from this BIOS-style schedule panel.',
+  },
+  players: {
+    title: 'Players',
+    summary: 'Roster registry',
+    rows: [
+      ['Roster size', '12 players'],
+      ['Available', '10 active'],
+      ['Injured', '1 listed'],
+      ['Scouting', 'Enabled'],
+    ],
+    copy:
+      'Review player profiles, positions, form indicators, availability, and scouting notes in one consistent interface.',
+  },
+  stats: {
+    title: 'Stats',
+    summary: 'Performance table',
+    rows: [
+      ['Team pace', 'High'],
+      ['FG trend', '+4.2%'],
+      ['Rebounds', 'Stable'],
+      ['Turnovers', 'Watch'],
+    ],
+    copy:
+      'Inspect team and player metrics with compact rows designed for quick comparison during analysis.',
+  },
+  prediction: {
+    title: 'Prediction',
+    summary: 'Forecast engine',
+    rows: [
+      ['Model status', 'Standby'],
+      ['Confidence', 'Pending'],
+      ['Inputs', 'Awaiting data'],
+      ['Output', 'No pick yet'],
+    ],
+    copy:
+      'Prepare prediction inputs, compare matchup signals, and surface model decisions once real data is connected.',
+  },
+  settings: {
+    title: 'Settings',
+    summary: 'System options',
+    rows: [
+      ['Theme', 'BIOS blue'],
+      ['Network', 'LAN'],
+      ['Expo Go', '54.0.6'],
+      ['Build', '1.0.0'],
+    ],
+    copy:
+      'Tune app preferences, preview runtime status, and keep environment details visible while the product grows.',
+  },
+};
+
+const navItems = [
+  ['home', 'Home'],
+  ['games', 'Games'],
+  ['players', 'Players'],
+  ['stats', 'Stats'],
+  ['prediction', 'Predict'],
+  ['settings', 'Settings'],
+];
+
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeScreen, setActiveScreen] = useState('home');
+
   return (
     <View style={styles.container}>
-      <View style={styles.screen}>
-        <View style={styles.headerBar}>
-          <Text style={styles.headerTitle}>BALLCDX SETUP UTILITY</Text>
-          <Text style={styles.headerMeta}>EXPO GO 54.0.6</Text>
-        </View>
-
-        <View style={styles.frame}>
-          <View style={styles.menuBar}>
-            <Text style={[styles.menuItem, styles.menuItemActive]}>Main</Text>
-            <Text style={styles.menuItem}>Status</Text>
-            <Text style={styles.menuItem}>Boot</Text>
-            <Text style={styles.menuItem}>Exit</Text>
-          </View>
-
-          <View style={styles.content}>
-            <View style={styles.leftPane}>
-              <Text style={styles.sectionTitle}>SYSTEM SUMMARY</Text>
-
-              <InfoRow label="Project" value="ballCdx" />
-              <InfoRow label="Runtime" value="Expo SDK 54" />
-              <InfoRow label="React Native" value="0.81.5" />
-              <InfoRow label="Screen" value="Welcome" />
-
-              <View style={styles.divider} />
-
-              <Text style={styles.prompt}>Welcome to ballCdx</Text>
-              <Text style={styles.copy}>
-                Mobile interface check passed. Open this session in Expo Go to
-                continue development.
-              </Text>
-            </View>
-
-            <View style={styles.rightPane}>
-              <Text style={styles.helpTitle}>HELP</Text>
-              <Text style={styles.helpText}>
-                LAN packager is ready for device preview.
-              </Text>
-
-              <View style={styles.statusBox}>
-                <Text style={styles.statusLabel}>CURRENT STATE</Text>
-                <Text style={styles.statusValue}>READY</Text>
-              </View>
-
-              <Text style={styles.footerHint}>
-                F10: Save   ESC: Back   ENTER: Select
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.bottomBar}>
-          <Text style={styles.bottomText}>AMIBIOS STYLE MOBILE PREVIEW</Text>
-          <Text style={styles.bottomText}>BUILD 1.0.0</Text>
-        </View>
-      </View>
-
+      <BiosShell
+        activeScreen={activeScreen}
+        isAuthenticated={isAuthenticated}
+        onNavigate={setActiveScreen}
+        onLogout={() => {
+          setIsAuthenticated(false);
+          setActiveScreen('home');
+        }}>
+        {isAuthenticated ? (
+          <ModuleScreen screenKey={activeScreen} />
+        ) : (
+          <LoginScreen
+            onLogin={() => {
+              setIsAuthenticated(true);
+              setActiveScreen('home');
+            }}
+          />
+        )}
+      </BiosShell>
       <StatusBar style="light" />
     </View>
+  );
+}
+
+function BiosShell({
+  activeScreen,
+  children,
+  isAuthenticated,
+  onLogout,
+  onNavigate,
+}) {
+  const activeTitle = isAuthenticated ? screens[activeScreen].title : 'Login';
+
+  return (
+    <View style={styles.screen}>
+      <View style={styles.headerBar}>
+        <Text style={styles.headerTitle}>BALLCDX SETUP UTILITY</Text>
+        <Text style={styles.headerMeta}>ACTIVE: {activeTitle.toUpperCase()}</Text>
+      </View>
+
+      <View style={styles.frame}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.menuBar}
+          contentContainerStyle={styles.menuBarContent}>
+          {navItems.map(([key, label]) => (
+            <Pressable
+              key={key}
+              disabled={!isAuthenticated}
+              onPress={() => onNavigate(key)}
+              style={[
+                styles.menuButton,
+                activeScreen === key && isAuthenticated && styles.menuButtonActive,
+                !isAuthenticated && styles.menuButtonDisabled,
+              ]}>
+              <Text
+                style={[
+                  styles.menuText,
+                  activeScreen === key && isAuthenticated && styles.menuTextActive,
+                  !isAuthenticated && styles.menuTextDisabled,
+                ]}>
+                {label}
+              </Text>
+            </Pressable>
+          ))}
+
+          {isAuthenticated && (
+            <Pressable style={styles.menuButton} onPress={onLogout}>
+              <Text style={styles.menuText}>Logout</Text>
+            </Pressable>
+          )}
+        </ScrollView>
+
+        {children}
+      </View>
+
+      <View style={styles.bottomBar}>
+        <Text style={styles.bottomText}>AMIBIOS STYLE MOBILE PREVIEW</Text>
+        <Text style={styles.bottomText}>
+          {isAuthenticated ? 'SESSION: GLI' : 'AUTH REQUIRED'}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function LoginScreen({ onLogin }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const submit = () => {
+    if (
+      username.trim().toLowerCase() === credentials.username &&
+      password === credentials.password
+    ) {
+      setError('');
+      onLogin();
+      return;
+    }
+
+    setError('ACCESS DENIED: INVALID USERNAME OR PASSWORD');
+  };
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={styles.content}>
+      <View style={styles.panel}>
+        <Text style={styles.sectionTitle}>SECURITY CHECKPOINT</Text>
+        <Text style={styles.prompt}>Operator login</Text>
+        <Text style={styles.copy}>
+          Enter authorized credentials to unlock the ballCdx modules.
+        </Text>
+
+        <View style={styles.formGroup}>
+          <Text style={styles.inputLabel}>USERNAME</Text>
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            cursorColor={theme.colors.yellow}
+            onChangeText={setUsername}
+            placeholder="gli"
+            placeholderTextColor={theme.colors.gray}
+            style={styles.input}
+            value={username}
+          />
+        </View>
+
+        <View style={styles.formGroup}>
+          <Text style={styles.inputLabel}>PASSWORD</Text>
+          <TextInput
+            cursorColor={theme.colors.yellow}
+            onChangeText={setPassword}
+            onSubmitEditing={submit}
+            placeholder="1"
+            placeholderTextColor={theme.colors.gray}
+            secureTextEntry
+            style={styles.input}
+            value={password}
+          />
+        </View>
+
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+        <Pressable style={styles.primaryButton} onPress={submit}>
+          <Text style={styles.primaryButtonText}>ENTER SETUP</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.helpPanel}>
+        <Text style={styles.helpTitle}>LOGIN HELP</Text>
+        <InfoRow label="Username" value="gli" />
+        <InfoRow label="Password" value="1" />
+      </View>
+    </KeyboardAvoidingView>
+  );
+}
+
+function ModuleScreen({ screenKey }) {
+  const screen = screens[screenKey];
+
+  return (
+    <ScrollView style={styles.content} contentContainerStyle={styles.contentBody}>
+      <View style={styles.panel}>
+        <Text style={styles.sectionTitle}>{screen.title.toUpperCase()}</Text>
+        <Text style={styles.prompt}>{screen.summary}</Text>
+        <Text style={styles.copy}>{screen.copy}</Text>
+
+        <View style={styles.divider} />
+
+        {screen.rows.map(([label, value]) => (
+          <InfoRow key={label} label={label} value={value} />
+        ))}
+      </View>
+
+      <View style={styles.helpPanel}>
+        <Text style={styles.helpTitle}>MODULE STATUS</Text>
+        <View style={styles.statusBox}>
+          <Text style={styles.statusLabel}>CURRENT MODULE</Text>
+          <Text style={styles.statusValue}>{screen.title.toUpperCase()}</Text>
+        </View>
+        <Text style={styles.footerHint}>Tap menu entries to switch screens.</Text>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -107,7 +339,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.white,
     borderWidth: 2,
     justifyContent: 'center',
-    minHeight: 36,
+    minHeight: 42,
     paddingHorizontal: 10,
   },
   headerTitle: {
@@ -133,38 +365,57 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   menuBar: {
-    alignItems: 'center',
     backgroundColor: theme.colors.blue700,
     borderBottomColor: theme.colors.white,
     borderBottomWidth: 2,
-    flexDirection: 'row',
-    minHeight: 34,
-    paddingHorizontal: 8,
+    flexGrow: 0,
+    minHeight: 42,
   },
-  menuItem: {
+  menuBarContent: {
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+  },
+  menuButton: {
+    borderColor: theme.colors.blue700,
+    borderWidth: 1,
+    marginRight: 8,
+    paddingHorizontal: 9,
+    paddingVertical: 6,
+  },
+  menuButtonActive: {
+    backgroundColor: theme.colors.gray,
+    borderColor: theme.colors.white,
+  },
+  menuButtonDisabled: {
+    opacity: 0.45,
+  },
+  menuText: {
     color: theme.colors.gray,
     fontFamily: theme.font.family,
     fontSize: 13,
     fontWeight: '700',
-    marginRight: 18,
-    paddingHorizontal: 6,
-    paddingVertical: 4,
   },
-  menuItemActive: {
-    backgroundColor: theme.colors.gray,
+  menuTextActive: {
     color: theme.colors.blue900,
+  },
+  menuTextDisabled: {
+    color: theme.colors.gray,
   },
   content: {
     flex: 1,
     padding: 10,
   },
-  leftPane: {
+  contentBody: {
+    flexGrow: 1,
+  },
+  panel: {
     backgroundColor: theme.colors.blue900,
     borderColor: theme.colors.gray,
     borderWidth: 2,
     padding: 12,
   },
-  rightPane: {
+  helpPanel: {
     backgroundColor: theme.colors.blue800,
     borderColor: theme.colors.gray,
     borderTopWidth: 0,
@@ -178,33 +429,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '900',
     marginBottom: 12,
-  },
-  infoRow: {
-    alignItems: 'center',
-    borderBottomColor: theme.colors.blue700,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    minHeight: 30,
-  },
-  infoLabel: {
-    color: theme.colors.gray,
-    fontFamily: theme.font.family,
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  infoValue: {
-    color: theme.colors.white,
-    fontFamily: theme.font.family,
-    fontSize: 13,
-    fontWeight: '900',
-    textAlign: 'right',
-  },
-  divider: {
-    backgroundColor: theme.colors.gray,
-    height: 2,
-    marginBottom: 16,
-    marginTop: 16,
   },
   prompt: {
     color: theme.colors.cyan,
@@ -221,6 +445,81 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     marginTop: 10,
   },
+  formGroup: {
+    marginTop: 18,
+  },
+  inputLabel: {
+    color: theme.colors.yellow,
+    fontFamily: theme.font.family,
+    fontSize: 12,
+    fontWeight: '900',
+    marginBottom: 6,
+  },
+  input: {
+    backgroundColor: theme.colors.blue950,
+    borderColor: theme.colors.cyan,
+    borderWidth: 2,
+    color: theme.colors.white,
+    fontFamily: theme.font.family,
+    fontSize: 18,
+    fontWeight: '800',
+    minHeight: 48,
+    paddingHorizontal: 12,
+  },
+  errorText: {
+    color: theme.colors.red,
+    fontFamily: theme.font.family,
+    fontSize: 12,
+    fontWeight: '900',
+    lineHeight: 18,
+    marginTop: 14,
+  },
+  primaryButton: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.gray,
+    borderColor: theme.colors.white,
+    borderWidth: 2,
+    marginTop: 20,
+    minHeight: 48,
+    justifyContent: 'center',
+    paddingHorizontal: 12,
+  },
+  primaryButtonText: {
+    color: theme.colors.blue900,
+    fontFamily: theme.font.family,
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  infoRow: {
+    alignItems: 'center',
+    borderBottomColor: theme.colors.blue700,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 32,
+  },
+  infoLabel: {
+    color: theme.colors.gray,
+    flex: 1,
+    fontFamily: theme.font.family,
+    fontSize: 13,
+    fontWeight: '700',
+    paddingRight: 8,
+  },
+  infoValue: {
+    color: theme.colors.white,
+    flex: 1,
+    fontFamily: theme.font.family,
+    fontSize: 13,
+    fontWeight: '900',
+    textAlign: 'right',
+  },
+  divider: {
+    backgroundColor: theme.colors.gray,
+    height: 2,
+    marginBottom: 16,
+    marginTop: 16,
+  },
   helpTitle: {
     color: theme.colors.yellow,
     fontFamily: theme.font.family,
@@ -228,16 +527,10 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     marginBottom: 10,
   },
-  helpText: {
-    color: theme.colors.white,
-    fontFamily: theme.font.family,
-    fontSize: 13,
-    lineHeight: 20,
-  },
   statusBox: {
     borderColor: theme.colors.cyan,
     borderWidth: 2,
-    marginTop: 18,
+    marginTop: 8,
     padding: 12,
   },
   statusLabel: {
@@ -249,7 +542,7 @@ const styles = StyleSheet.create({
   statusValue: {
     color: theme.colors.yellow,
     fontFamily: theme.font.family,
-    fontSize: 24,
+    fontSize: 23,
     fontWeight: '900',
     marginTop: 4,
   },
@@ -258,7 +551,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.font.family,
     fontSize: 12,
     lineHeight: 18,
-    marginTop: 'auto',
+    marginTop: 14,
   },
   bottomBar: {
     alignItems: 'center',
