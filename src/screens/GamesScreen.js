@@ -38,8 +38,6 @@ export function GamesScreen() {
         </View>
 
         <View style={styles.gamesPanel}>
-          <Text style={styles.helpTitle}>GAMES</Text>
-
           {gamesState.isLoading && (
             <Text style={styles.gamesStateText}>LOADING GAMES...</Text>
           )}
@@ -114,11 +112,6 @@ const GameCard = memo(function GameCard({ game }) {
         <GameStat label="White" value={game.num_players_white ?? '-'} />
         <GameStat label="Black" value={game.num_players_black ?? '-'} />
         <GameStat label="Total" value={game.total_players ?? '-'} />
-      </View>
-
-      <View style={styles.gameDiffRow}>
-        <Text style={styles.gameDiffText}>WHITE DIFF: {game.white_diff ?? '-'}</Text>
-        <Text style={styles.gameDiffText}>BLACK DIFF: {game.black_diff ?? '-'}</Text>
       </View>
     </View>
   );

@@ -78,7 +78,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   menuTextActive: {
-    color: theme.colors.blue900,
+    color: theme.colors.yellow,
   },
   content: {
     flex: 1,
@@ -370,17 +370,6 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '900',
     marginTop: 2,
-  },
-  gameDiffRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-  },
-  gameDiffText: {
-    color: theme.colors.gray,
-    fontFamily: theme.font.family,
-    fontSize: 10,
-    fontWeight: '700',
   },
   bottomBar: {
     alignItems: 'center',
