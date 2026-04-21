@@ -5,6 +5,7 @@ import { styles } from '../styles/biosStyles';
 
 export function SeasonDropdown({
   error,
+  helperTextOverride,
   isLoading,
   onSelect,
   seasons,
@@ -13,11 +14,11 @@ export function SeasonDropdown({
   const [isOpen, setIsOpen] = useState(false);
 
   const selectedLabel = selectedSeason?.season ?? 'Select season';
-  const helperText = isLoading
+  const helperText = helperTextOverride ?? (isLoading
     ? 'LOADING SEASONS...'
     : error
       ? `SEASON LINK ERROR: ${error}`
-      : `${seasons.length} SEASONS LOADED`;
+      : `${seasons.length} SEASONS LOADED`);
 
   return (
     <View style={styles.dropdownBlock}>

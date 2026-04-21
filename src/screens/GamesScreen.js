@@ -1,8 +1,6 @@
 import { ScrollView, Text, View } from 'react-native';
 
-import { InfoRow } from '../components/InfoRow';
 import { SeasonDropdown } from '../components/SeasonDropdown';
-import { screens } from '../data/screens';
 import { useConferenceSeasonGames } from '../hooks/useConferenceSeasonGames';
 import { useSeasons } from '../hooks/useSeasons';
 import { styles } from '../styles/biosStyles';
@@ -21,23 +19,18 @@ export function GamesScreen() {
       <View style={styles.panel}>
         <SeasonDropdown
           error={seasonState.error}
+          helperTextOverride={
+            gamesState.isLoading
+              ? 'LOADING GAMES...'
+              : gamesState.error
+                ? `GAME LINK ERROR: ${gamesState.error}`
+                : `${gamesState.games.length} GAMES LOADED`
+          }
           isLoading={seasonState.isLoading}
           onSelect={seasonState.setSelectedSeasonId}
           seasons={seasonState.seasons}
           selectedSeason={seasonState.selectedSeason}
         />
-
-        <Text style={styles.sectionTitle}>{screens.games.title.toUpperCase()}</Text>
-        <Text style={styles.prompt}>{screens.games.summary}</Text>
-        <Text style={styles.copy}>{screens.games.copy}</Text>
-
-        <View style={styles.divider} />
-
-        <InfoRow
-          label="Selected season"
-          value={seasonState.selectedSeason?.season ?? 'None'}
-        />
-        <InfoRow label="Games loaded" value={`${gamesState.games.length}`} />
       </View>
 
       <View style={styles.gamesPanel}>
