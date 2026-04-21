@@ -164,38 +164,35 @@ function BiosShell({
       </View>
 
       <View style={styles.frame}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.menuBar}
-          contentContainerStyle={styles.menuBarContent}>
-          {navItems.map(([key, label]) => (
-            <Pressable
-              key={key}
-              disabled={!isAuthenticated}
-              onPress={() => onNavigate(key)}
-              style={[
-                styles.menuButton,
-                activeScreen === key && isAuthenticated && styles.menuButtonActive,
-                !isAuthenticated && styles.menuButtonDisabled,
-              ]}>
-              <Text
+        {isAuthenticated && (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.menuBar}
+            contentContainerStyle={styles.menuBarContent}>
+            {navItems.map(([key, label]) => (
+              <Pressable
+                key={key}
+                onPress={() => onNavigate(key)}
                 style={[
-                  styles.menuText,
-                  activeScreen === key && isAuthenticated && styles.menuTextActive,
-                  !isAuthenticated && styles.menuTextDisabled,
+                  styles.menuButton,
+                  activeScreen === key && styles.menuButtonActive,
                 ]}>
-                {label}
-              </Text>
-            </Pressable>
-          ))}
+                <Text
+                  style={[
+                    styles.menuText,
+                    activeScreen === key && styles.menuTextActive,
+                  ]}>
+                  {label}
+                </Text>
+              </Pressable>
+            ))}
 
-          {isAuthenticated && (
             <Pressable style={styles.menuButton} onPress={onLogout}>
               <Text style={styles.menuText}>Logout</Text>
             </Pressable>
-          )}
-        </ScrollView>
+          </ScrollView>
+        )}
 
         {children}
       </View>
@@ -274,11 +271,6 @@ function LoginScreen({ onLogin }) {
         </Pressable>
       </View>
 
-      <View style={styles.helpPanel}>
-        <Text style={styles.helpTitle}>LOGIN HELP</Text>
-        <InfoRow label="Username" value="gli" />
-        <InfoRow label="Password" value="1" />
-      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -387,9 +379,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.gray,
     borderColor: theme.colors.white,
   },
-  menuButtonDisabled: {
-    opacity: 0.45,
-  },
   menuText: {
     color: theme.colors.gray,
     fontFamily: theme.font.family,
@@ -398,9 +387,6 @@ const styles = StyleSheet.create({
   },
   menuTextActive: {
     color: theme.colors.blue900,
-  },
-  menuTextDisabled: {
-    color: theme.colors.gray,
   },
   content: {
     flex: 1,
