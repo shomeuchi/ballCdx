@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { endpoints } from '../constants/api';
+import { getSeasonsByConferenceId } from '../services/main/seasonsService';
 
-export function useSeasons(enabled = true) {
+export function useSeasons(enabled = true, conferenceId = 1) {
   const [seasons, setSeasons] = useState([]);
   const [selectedSeasonId, setSelectedSeasonId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,14 +20,7 @@ export function useSeasons(enabled = true) {
       setError('');
 
       try {
-        const response = await fetch(endpoints.seasonsByConferenceId);
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-        const list = Array.isArray(data) ? data : [];
+        const list = await getSeasonsByConferenceId(conferenceId);
 
         if (!isMounted) {
           return;
@@ -55,7 +48,7 @@ export function useSeasons(enabled = true) {
     return () => {
       isMounted = false;
     };
-  }, [enabled]);
+  }, [conferenceId, enabled]);
 
   const selectedSeason =
     seasons.find(season => season.id === selectedSeasonId) ?? null;
