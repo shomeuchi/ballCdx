@@ -26,16 +26,19 @@ const screenComponents = {
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [activeScreen, setActiveScreen] = useState('home');
   const ActiveScreen = screenComponents[activeScreen] ?? HomeScreen;
   const seasonState = useSeasons(isAuthenticated);
 
-  const handleLogin = () => {
+  const handleLogin = user => {
+    setCurrentUser(user);
     setIsAuthenticated(true);
     setActiveScreen('home');
   };
 
   const handleLogout = () => {
+    setCurrentUser(null);
     setIsAuthenticated(false);
     setActiveScreen('home');
   };
@@ -48,7 +51,7 @@ export default function App() {
         onNavigate={setActiveScreen}
         onLogout={handleLogout}>
         {isAuthenticated ? (
-          <ActiveScreen seasonState={seasonState} />
+          <ActiveScreen currentUser={currentUser} seasonState={seasonState} />
         ) : (
           <LoginScreen onLogin={handleLogin} />
         )}

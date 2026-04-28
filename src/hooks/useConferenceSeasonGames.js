@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { getConferenceSeasonGames } from '../services/game/gamesService';
 
@@ -6,6 +6,11 @@ export function useConferenceSeasonGames({ conferenceId, seasonId }) {
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [refreshIndex, setRefreshIndex] = useState(0);
+
+  const refresh = useCallback(() => {
+    setRefreshIndex(current => current + 1);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -59,11 +64,12 @@ export function useConferenceSeasonGames({ conferenceId, seasonId }) {
       isMounted = false;
       controller.abort();
     };
-  }, [conferenceId, seasonId]);
+  }, [conferenceId, refreshIndex, seasonId]);
 
   return {
     error,
     games,
     isLoading,
+    refresh,
   };
 }

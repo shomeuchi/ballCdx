@@ -9,25 +9,44 @@ import {
 } from 'react-native';
 
 import { theme } from '../../constants/theme';
-import { credentials } from '../../data/auth';
+import { loginUser } from '../../services/login/loginService';
 import { styles } from '../../styles/biosStyles';
 
 export function LoginScreen({ onLogin }) {
-  const [username, setUsername] = useState(credentials.username);
-  const [password, setPassword] = useState(credentials.password);
+  const [username, setUsername] = useState('Gli');
+  const [password, setPassword] = useState('1');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = () => {
-    if (
-      username.trim().toLowerCase() === credentials.username &&
-      password === credentials.password
-    ) {
-      setError('');
-      onLogin();
+  const submit = async () => {
+    if (isSubmitting) {
       return;
     }
 
-    setError('ACCESS DENIED: INVALID USERNAME OR PASSWORD');
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      const user = await loginUser({
+        password,
+        username: username.trim(),
+      });
+
+      if (!user?.id) {
+        setError('ACCESS DENIED: INVALID LOGIN RESPONSE');
+        return;
+      }
+
+      onLogin(user);
+    } catch (requestError) {
+      setError(
+        requestError.message
+          ? `ACCESS DENIED: ${requestError.message}`
+          : 'ACCESS DENIED: INVALID USERNAME OR PASSWORD',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -72,7 +91,9 @@ export function LoginScreen({ onLogin }) {
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
         <Pressable style={styles.primaryButton} onPress={submit}>
-          <Text style={styles.primaryButtonText}>ENTER</Text>
+          <Text style={styles.primaryButtonText}>
+            {isSubmitting ? 'ENTERING...' : 'ENTER'}
+          </Text>
         </Pressable>
       </View>
     </KeyboardAvoidingView>

@@ -7,7 +7,7 @@ import { styles } from '../../styles/biosStyles';
 import { AddGameScreen } from './addGame/AddGameScreen';
 import { GameDetailsScreen } from './gameDetails/GameDetailsScreen';
 
-export function GameScreen({ seasonState }) {
+export function GameScreen({ currentUser, seasonState }) {
   const [selectedGame, setSelectedGame] = useState(null);
   const [isAddingGame, setIsAddingGame] = useState(false);
   const seasonId = seasonState?.selectedSeason?.id ?? null;
@@ -19,7 +19,9 @@ export function GameScreen({ seasonState }) {
     conferenceId,
     seasonId,
   });
-  const canAddGame = seasonId !== 9999999;
+  const canAddGame =
+    seasonId !== 9999999 &&
+    String(currentUser?.user_type ?? '').toLowerCase() === 'admin';
   const dropdownHelperText = gamesState.isLoading
     ? 'LOADING GAMES...'
     : gamesState.error
@@ -94,7 +96,11 @@ export function GameScreen({ seasonState }) {
     return (
       <AddGameScreen
         onBack={() => setIsAddingGame(false)}
-        season={seasonState?.selectedSeason}
+        onCreated={() => {
+          gamesState.refresh();
+          setIsAddingGame(false);
+        }}
+        seasonState={seasonState}
       />
     );
   }
