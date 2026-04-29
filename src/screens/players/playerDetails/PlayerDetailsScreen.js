@@ -10,6 +10,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 
 import { AppPopup } from '../../../components/AppPopup';
+import { LoadingDialog } from '../../../components/LoadingDialog';
 import { theme } from '../../../constants/theme';
 import { editPlayer } from '../../../services/player/playersService';
 import { styles } from '../../../styles/biosStyles';
@@ -371,6 +372,11 @@ export function PlayerDetailsScreen({ currentUser, onBack, onSaved, player }) {
         onClose={closePopup}
         title={popup?.title ?? ''}
         visible={Boolean(popup)}
+      />
+      <LoadingDialog
+        message="SAVING PLAYER..."
+        onRequestClose={() => {}}
+        visible={isSaving}
       />
     </>
   );

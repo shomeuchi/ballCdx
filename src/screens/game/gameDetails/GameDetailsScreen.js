@@ -1,5 +1,6 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
+import { LoadingDialog } from '../../../components/LoadingDialog';
 import { useGamePlayers } from '../../../hooks/useGamePlayers';
 import { styles } from '../../../styles/biosStyles';
 
@@ -7,11 +8,12 @@ export function GameDetailsScreen({ game, onBack }) {
   const playersState = useGamePlayers(game.id);
 
   return (
-    <ScrollView style={styles.content} contentContainerStyle={styles.contentBody}>
-      <View style={styles.panel}>
-        <Pressable style={styles.secondaryButton} onPress={onBack}>
-          <Text style={styles.secondaryButtonText}>BACK TO GAMES</Text>
-        </Pressable>
+    <>
+      <ScrollView style={styles.content} contentContainerStyle={styles.contentBody}>
+        <View style={styles.panel}>
+          <Pressable style={styles.secondaryButton} onPress={onBack}>
+            <Text style={styles.secondaryButtonText}>BACK TO GAMES</Text>
+          </Pressable>
 
         <Text style={styles.sectionTitle}>GAME DETAILS</Text>
         <Text style={styles.prompt}>GAME #{game.id}</Text>
@@ -26,7 +28,7 @@ export function GameDetailsScreen({ game, onBack }) {
         </View>
       </View>
 
-      <View style={styles.gamesPanel}>
+        <View style={styles.gamesPanel}>
         {playersState.isLoading && (
           <Text style={styles.gamesStateText}>LOADING PLAYERS...</Text>
         )}
@@ -53,8 +55,14 @@ export function GameDetailsScreen({ game, onBack }) {
             title={`BLACK (${playersState.teams.black.length})`}
           />
         </View>
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+      <LoadingDialog
+        message="LOADING PLAYERS..."
+        onRequestClose={() => {}}
+        visible={playersState.isLoading}
+      />
+    </>
   );
 }
 

@@ -7,7 +7,6 @@ export function BiosShell({
   activeScreen,
   children,
   isAuthenticated,
-  onLogout,
   onNavigate,
 }) {
   const activeTitle = isAuthenticated ? screens[activeScreen].title : 'Login';
@@ -64,10 +63,6 @@ export function BiosShell({
             </Pressable>
 
             <Text style={styles.bottomText}>SESSION: GLI</Text>
-
-            <Pressable style={styles.footerButton} onPress={onLogout}>
-              <Text style={styles.footerButtonText}>LOGOUT</Text>
-            </Pressable>
           </>
         ) : (
           <Text style={styles.bottomText}>AUTH REQUIRED</Text>

@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 
+import { LoadingDialog } from '../../components/LoadingDialog';
 import { theme } from '../../constants/theme';
 import { loginUser } from '../../services/login/loginService';
 import { styles } from '../../styles/biosStyles';
@@ -53,12 +54,13 @@ export function LoginScreen({ onLogin }) {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={styles.content}>
-      <View style={styles.panel}>
-        <Text style={styles.sectionTitle}>SECURITY CHECKPOINT</Text>
-        <Text style={styles.prompt}>Operator login</Text>
-        <Text style={styles.copy}>
-          Enter authorized credentials to unlock the ballCdx modules.
-        </Text>
+      <>
+        <View style={styles.panel}>
+          <Text style={styles.sectionTitle}>SECURITY CHECKPOINT</Text>
+          <Text style={styles.prompt}>Operator login</Text>
+          <Text style={styles.copy}>
+            Enter authorized credentials to unlock the ballCdx modules.
+          </Text>
 
         <View style={styles.formGroup}>
           <Text style={styles.inputLabel}>USERNAME</Text>
@@ -90,12 +92,18 @@ export function LoginScreen({ onLogin }) {
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-        <Pressable style={styles.primaryButton} onPress={submit}>
-          <Text style={styles.primaryButtonText}>
-            {isSubmitting ? 'ENTERING...' : 'ENTER'}
-          </Text>
-        </Pressable>
-      </View>
+          <Pressable style={styles.primaryButton} onPress={submit}>
+            <Text style={styles.primaryButtonText}>
+              {isSubmitting ? 'ENTERING...' : 'ENTER'}
+            </Text>
+          </Pressable>
+        </View>
+        <LoadingDialog
+          message="CHECKING ACCESS..."
+          onRequestClose={() => {}}
+          visible={isSubmitting}
+        />
+      </>
     </KeyboardAvoidingView>
   );
 }

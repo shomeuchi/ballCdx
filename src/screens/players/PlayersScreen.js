@@ -1,6 +1,7 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { FlatList, Image, Pressable, Text, View } from 'react-native';
 
+import { LoadingDialog } from '../../components/LoadingDialog';
 import { getPlayersWithLast10Games } from '../../services/player/playersService';
 import { styles } from '../../styles/biosStyles';
 import { AddPlayerScreen } from './addPlayer/AddPlayerScreen';
@@ -102,82 +103,85 @@ export function PlayersScreen({ currentUser }) {
   }
 
   return (
-    <FlatList
-      data={players}
-      keyExtractor={(player, index) => `${getPlayerId(player) || index}`}
-      ListHeaderComponent={
-        <>
-          <View style={styles.panel}>
-            <Text style={styles.sectionTitle}>PLAYERS</Text>
-            <Text style={styles.prompt}>ROSTER TABLE</Text>
-            <Text style={styles.copy}>
-              All players with roster status and employment details.
-            </Text>
-
-            <View style={styles.divider} />
-
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Players loaded</Text>
-              <Text style={styles.infoValue}>{players.length}</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Active</Text>
-              <Text style={styles.infoValue}>{playerCounts.active}</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Injured</Text>
-              <Text style={styles.infoValue}>{playerCounts.injured}</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Inessential</Text>
-              <Text style={styles.infoValue}>{playerCounts.inessential}</Text>
-            </View>
-          </View>
-
-          <View style={styles.playersTablePanel}>
-            {canAddPlayer && (
-              <View style={styles.addGameButtonRow}>
-                <Pressable
-                  style={styles.addGameButton}
-                  onPress={() => setIsAddingPlayer(true)}>
-                  <Text style={styles.addGameButtonText}>ADD PLAYER</Text>
-                </Pressable>
-              </View>
-            )}
-
-            {isLoading && (
-              <Text style={styles.gamesStateText}>LOADING PLAYERS...</Text>
-            )}
-
-            {error ? (
-              <Text style={[styles.gamesStateText, styles.dropdownError]}>
-                PLAYERS LINK ERROR: {error}
+    <>
+      <FlatList
+        data={players}
+        keyExtractor={(player, index) => `${getPlayerId(player) || index}`}
+        ListHeaderComponent={
+          <>
+            <View style={styles.panel}>
+              <Text style={styles.sectionTitle}>PLAYERS</Text>
+              <Text style={styles.prompt}>ROSTER TABLE</Text>
+              <Text style={styles.copy}>
+                All players with roster status and employment details.
               </Text>
-            ) : null}
 
-            {!isLoading && !error && players.length === 0 && (
-              <Text style={styles.gamesStateText}>NO PLAYERS FOUND</Text>
-            )}
+              <View style={styles.divider} />
 
-            <View style={styles.playersTableHeader}>
-              <Text style={styles.playersIndexHeader}>NO</Text>
-              <Text style={styles.playersAvatarHeader}>AV</Text>
-              <Text style={styles.playersNameHeader}>PLAYER</Text>
-              <Text style={styles.playersCellHeader}>STATUS</Text>
-              <Text style={styles.playersCellHeader}>WORK</Text>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Players loaded</Text>
+                <Text style={styles.infoValue}>{players.length}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Active</Text>
+                <Text style={styles.infoValue}>{playerCounts.active}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Injured</Text>
+                <Text style={styles.infoValue}>{playerCounts.injured}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Inessential</Text>
+                <Text style={styles.infoValue}>{playerCounts.inessential}</Text>
+              </View>
             </View>
-          </View>
-        </>
-      }
-      renderItem={({ item, index }) => (
-        <PlayerTableRow
-          index={index}
-          onPress={setSelectedPlayer}
-          player={item}
-        />
-      )}
-      style={styles.content}
-    />
+
+            <View style={styles.playersTablePanel}>
+              {canAddPlayer && (
+                <View style={styles.addGameButtonRow}>
+                  <Pressable
+                    style={styles.addGameButton}
+                    onPress={() => setIsAddingPlayer(true)}>
+                    <Text style={styles.addGameButtonText}>ADD PLAYER</Text>
+                  </Pressable>
+                </View>
+              )}
+
+              {error ? (
+                <Text style={[styles.gamesStateText, styles.dropdownError]}>
+                  PLAYERS LINK ERROR: {error}
+                </Text>
+              ) : null}
+
+              {!isLoading && !error && players.length === 0 && (
+                <Text style={styles.gamesStateText}>NO PLAYERS FOUND</Text>
+              )}
+
+              <View style={styles.playersTableHeader}>
+                <Text style={styles.playersIndexHeader}>NO</Text>
+                <Text style={styles.playersAvatarHeader}>AV</Text>
+                <Text style={styles.playersNameHeader}>PLAYER</Text>
+                <Text style={styles.playersCellHeader}>STATUS</Text>
+                <Text style={styles.playersCellHeader}>WORK</Text>
+              </View>
+            </View>
+          </>
+        }
+        renderItem={({ item, index }) => (
+          <PlayerTableRow
+            index={index}
+            onPress={setSelectedPlayer}
+            player={item}
+          />
+        )}
+        style={styles.content}
+      />
+      <LoadingDialog
+        message="LOADING PLAYERS..."
+        onRequestClose={() => {}}
+        visible={isLoading}
+      />
+    </>
   );
 }
 

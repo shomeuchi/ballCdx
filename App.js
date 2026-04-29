@@ -49,9 +49,13 @@ export default function App() {
         activeScreen={activeScreen}
         isAuthenticated={isAuthenticated}
         onNavigate={setActiveScreen}
-        onLogout={handleLogout}>
+      >
         {isAuthenticated ? (
-          <ActiveScreen currentUser={currentUser} seasonState={seasonState} />
+          <ActiveScreen
+            currentUser={currentUser}
+            onLogout={handleLogout}
+            seasonState={seasonState}
+          />
         ) : (
           <LoginScreen onLogin={handleLogin} />
         )}

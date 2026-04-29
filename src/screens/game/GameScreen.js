@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 
+import { LoadingDialog } from '../../components/LoadingDialog';
 import { SeasonDropdown } from '../../components/SeasonDropdown';
 import { useConferenceSeasonGames } from '../../hooks/useConferenceSeasonGames';
 import { styles } from '../../styles/biosStyles';
@@ -115,18 +116,27 @@ export function GameScreen({ currentUser, seasonState }) {
   }
 
   return (
-    <FlatList
-      data={gamesState.games}
-      initialNumToRender={12}
-      keyExtractor={keyExtractor}
-      ListHeaderComponent={listHeader}
-      maxToRenderPerBatch={8}
-      removeClippedSubviews
-      renderItem={renderGame}
-      style={styles.content}
-      updateCellsBatchingPeriod={50}
-      windowSize={7}
-    />
+    <>
+      <FlatList
+        data={gamesState.games}
+        initialNumToRender={12}
+        keyExtractor={keyExtractor}
+        ListHeaderComponent={listHeader}
+        maxToRenderPerBatch={8}
+        removeClippedSubviews
+        renderItem={renderGame}
+        style={styles.content}
+        updateCellsBatchingPeriod={50}
+        windowSize={7}
+      />
+      <LoadingDialog
+        message={
+          seasonState?.isLoading ? 'LOADING SEASONS...' : 'LOADING GAMES...'
+        }
+        onRequestClose={() => {}}
+        visible={Boolean(seasonState?.isLoading) || gamesState.isLoading}
+      />
+    </>
   );
 }
 

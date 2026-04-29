@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import { AppPopup } from '../../../components/AppPopup';
+import { LoadingDialog } from '../../../components/LoadingDialog';
 import { SeasonDropdown } from '../../../components/SeasonDropdown';
 import { getPlayersWithLast10Games } from '../../../services/player/playersService';
 import { createGameWithTeamPlayers } from '../../../services/game/gamesService';
@@ -325,6 +326,21 @@ export function AddGameScreen({ onBack, onCreated, seasonState }) {
         onClose={closePopup}
         title={popup?.title ?? ''}
         visible={Boolean(popup)}
+      />
+      <LoadingDialog
+        message={
+          isSubmitting
+            ? 'CREATING GAME...'
+            : seasonState?.isLoading
+              ? 'LOADING SEASONS...'
+              : 'LOADING PLAYERS...'
+        }
+        onRequestClose={() => {}}
+        visible={
+          isSubmitting ||
+          Boolean(seasonState?.isLoading) ||
+          isLoadingPlayers
+        }
       />
     </>
   );
